@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore - Pixelstore</title>
+    <!-- Sử dụng Tailwind CSS cho giao diện hiện đại -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #1b2838; color: #c7d5e0; }
+        .game-card { background: rgba(0, 0, 0, 0.3); transition: transform 0.2s; }
+        .game-card:hover { transform: scale(1.05); background: rgba(42, 71, 94, 0.6); }
+        .btn-steam { background: linear-gradient(to right, #47bfff 5%, #1a44c2 60%); }
+    </style>
+</head>
+<body class="font-sans">
+
+    <!-- Header -->
+    <header class="bg-[#171a21] p-4 sticky top-0 z-50 shadow-xl">
+        <div class="container mx-auto flex justify-between items-center">
+
+            <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+            <style>
+                @keyframes rainbow {
+                    0% { color: #ff0000; }  
+                    14% { color: #ff7f00; }  
+                    28% { color: #ffff00; }   
+                    42% { color: #00ff00; }   
+                    56% { color: #0000ff; }  
+                    70% { color: #4b0082; } 
+                    84% { color: #8b00ff; } 
+                    100% { color: #ff0000; } 
+                }
+
+                .pixel-brand {
+                    font-family: 'Press Start 2P', cursive;
+                    image-rendering: pixelated;
+                    -webkit-font-smoothing: none;
+                    animation: rainbow 3s infinite linear;
+                    font-size: 1.25rem;
+                    letter-spacing: -2px;
+                
+
+                    display: inline-block;
+                    transform: skewX(-5deg);
+                    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+                }
+                .store-text {
+                    font-family: monospace;
+                    color: white;
+                    font-size: 2rem;
+                    font-weight: 50;
+                    margin-left: 10px;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                }
+            </style>
+
+<header class="bg-[#171a21] p-6 sticky top-0 z-50 shadow-2xl border-b border-gray-800">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex items-center">
+            <span class="pixel-brand pr-2">Pixelation</span>
+            <span class="store-text">   Store</span>
+        </div>
+    </div>
+</header>
+
+
+
+            <div id="auth-section" class="flex items-center gap-4">
+
+            <a href="./login.html">
+                <button onclick="showLogin()" class="text-sm hover:text-white">Đăng nhập</button>
+            </a>
+    <script>
+        function toggleToRegister() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('register-form').style.display = 'block';
+        }
+
+        function toggleToLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('register-form').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
+
+            </div>
+        </div>
+    </header>
+
+
+    <main class="container mx-auto py-8 px-4">
+
+        <div id="wallet-area" class="hidden mb-8 p-4 bg-[#2a475e] rounded-lg flex justify-between items-center">
+            <div>
+                <p class="text-gray-400 text-sm">Số dư tài khoản</p>
+                <h2 id="user-balance" class="text-2xl font-bold text-green-400">0$</h2>
+            </div>
+            <button onclick="depositMoney()" class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-white font-bold">
+                + Nạp 50$ (Tiền ảo)
+            </button>
+        </div>
+
+        <h2 class="text-xl mb-6 border-l-4 border-blue-500 pl-3 uppercase tracking-wider">Khám phá Game</h2>
+        
+        <div id="game-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+            <p class="col-span-full text-center">Đang tải dữ liệu từ API RAWG...</p>
+        </div>
+    </main>
+
+    <div id="game-modal" class="fixed inset-0 bg-black bg-opacity-80 hidden flex items-center justify-center p-4 z-[60]">
+        <div class="bg-[#1b2838] max-w-2xl w-full rounded-lg overflow-hidden relative border border-gray-700">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-2xl">✕</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+<main class="container mx-auto py-8 px-4">
+    <section id="hero-game" class="mb-12 relative rounded-lg overflow-hidden shadow-2xl h-[400px] flex items-end">
+        <video id="hero-video" autoplay muted loop class="absolute inset-0 w-full h-full object-cover opacity-60">
+            <source src="https://cdn.cloudflare.steamstatic.com" type="video/webm">
+        </video>
+        <div class="relative p-8 bg-gradient-to-t from-[#1b2838] to-transparent w-full">
+            <span class="bg-blue-600 text-xs px-2 py-1 rounded">NỔI BẬT & ĐẶC BIỆT</span>
+            <h2 id="hero-title" class="text-4xl font-bold text-white my-2 shadow-sm">Cyberpunk 2077</h2>
+            <button onclick="fetchGameDetail(41494, 60)" class="btn-steam px-6 py-2 rounded font-bold">Xem chi tiết</button>
+        </div>
+    </section>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <div class="lg:w-3/4">
+            <h2 class="text-xl mb-6 border-l-4 border-blue-500 pl-3 uppercase tracking-wider font-bold">Game Hot Nhất</h2>
+            <div id="game-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            </div>
+        </div>
+        <div class="lg:w-1/4">
+            <h2 class="text-xl mb-6 border-l-4 border-orange-500 pl-3 uppercase tracking-wider font-bold">Bảng Xếp Hạng</h2>
+            <div id="ranking-list" class="bg-[#16202d] rounded-lg p-4 flex flex-col gap-4">
+            </div>
+        </div>
+    </div>
+</main>
+<script src="./index.js"></script>
+</body>
+</html>

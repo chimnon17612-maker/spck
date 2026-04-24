@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập & Đăng Ký</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { background-color: #1b2838; color: #c7d5e0; }
+        .game-card { background: rgba(0, 0, 0, 0.3); transition: transform 0.2s; }
+        .game-card:hover { transform: scale(1.05); background: rgba(42, 71, 94, 0.6); }
+        .btn-steam { background: linear-gradient(to right, #47bfff 5%, #1a44c2 60%); }
+
+        .form-container {
+            max-width: 450px;
+            margin: 60px auto;
+            background-color: #1b2838;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .form-container h2 {
+
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="password"],
+        .form-container input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .form-container input[type="text"]:focus,
+        .form-container input[type="password"]:focus,
+        .form-container input[type="email"]:focus {
+            outline: none;
+        }
+        .form-container input[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .toggle-form:hover {
+            text-decoration: underline;
+        }
+        main {
+            min-height: calc(100vh - 300px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <width="100px" height="100px">
+        </div>
+        <nav>
+                <a href="./login.html">đăng nhập / đăng ký</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <div id="login-form">
+                <h2>Đăng Nhập</h2>
+                <div>
+                    <label for="login-username">Tên đăng nhập:</label>
+                    <input type="text" id="login-username" name="username" required style="color: #000;">
+                </div>
+                <div>
+                    <label for="login-password">Mật khẩu:</label>
+                    <input type="password" id="login-password" name="password" required style="color: #000;">
+                </div>
+                <button style="width: 100%"><input type="submit" value="Đăng nhập" class="login-btn" id="login-btn"></button>
+                <p class="toggle-form" onclick="toggleToRegister()">Chưa có tài khoản? Đăng ký ngay</p>
+            </div>
+
+            <div id="register-form" style="display: none;">
+                <h2>Đăng Ký</h2>
+                <div>
+                    <label for="reg-email">Email:</label>
+                    <input type="email" id="reg-email" name="email" required style="color: #000;">
+                </div>
+                <div>
+                    <label for="reg-username">Tên đăng nhập:</label>
+                    <input type="text" id="reg-username" name="username" required style="color: #000;">
+                </div>
+                <div>
+                    <label for="reg-password">Mật khẩu:</label>
+                    <input type="password" id="reg-password" name="password" required style="color: #000;">
+                </div>
+                <button style="width: 100%"><input type="submit" value="Đăng ký tài khoản" class="register-btn" id="register-btn"></button>
+                <p class="toggle-form" onclick="toggleToLogin()">Đã có tài khoản? Đăng nhập</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+    </footer>
+    <script src="./login.js"></script>
+</body>
+</html>

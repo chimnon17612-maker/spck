@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixelation Store | Thế giới Game bản quyền</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <style>
+
+        @keyframes rainbow {
+            0% { color: #ff0000; }    
+            14% { color: #ff7f00; }   
+            28% { color: #ffff00; }
+            42% { color: #00ff00; }   
+            56% { color: #0000ff; }   
+            70% { color: #4b0082; }   
+            84% { color: #8b00ff; }   
+            100% { color: #ff0000; }  
+        }
+
+        .pixel-brand {
+            font-family: 'Press Start 2P', cursive;
+            image-rendering: pixelated; 
+            -webkit-font-smoothing: none;
+            animation: rainbow 3s infinite linear;
+            font-size: 1.25rem; 
+            letter-spacing: -2px;
+        
+
+            display: inline-block;
+            transform: skewX(-5deg); 
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
+        }
+        .store-text {
+            font-family: monospace;
+            color: white;
+            font-size: 2rem;
+            font-weight: 50; 
+            margin-left: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .game-card { background: rgba(0, 0, 0, 0.3); transition: all 0.3s; border: 1px solid transparent; }
+        .game-card:hover { transform: translateY(-5px); background: rgba(42, 71, 94, 0.6); border-color: #3b82f6; }
+        .btn-steam { background: linear-gradient(to right, #47bfff 5%, #1a44c2 60%); transition: opacity 0.2s; }
+        .btn-steam:hover { opacity: 0.9; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #171a21; }
+        ::-webkit-scrollbar-thumb { background: #2a475e; border-radius: 10px;} 
+    </style>
+</head>
+<body>
+
+    <header class="bg-[#171a21] p-6 sticky top-0 z-50 shadow-2xl border-b border-gray-800">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="pixel-brand pr-2">Pixelation </span>
+                <span class="store-text"> Store</span>
+            </div>
+            <div id="auth-section" class="flex items-center gap-6">
+                <button onclick="showLogin()" class="text-gray-400 hover:text-white uppercase text-sm tracking-widest font-bold">Đăng nhập / Đăng ký</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4">
+        <div id="wallet-area" class="hidden mb-8 p-6 bg-[#2a475e] rounded-lg border border-blue-500/30 flex justify-between items-center shadow-lg">
+            <div>
+                <p class="text-blue-300 text-xs uppercase tracking-widest mb-1">Ví Pixel-Coin</p>
+                <h2 id="user-balance" class="text-3xl font-bold text-green-400">0$</h2>
+            </div>
+            <button onclick="depositMoney()" class="bg-green-600 hover:bg-green-500 px-6 py-3 rounded text-white font-bold shadow-lg transition-transform active:scale-95">
+                + NẠP 50$ TIỀN ẢO
+            </button>
+        </div>
+
+        <section id="hero-game" class="mb-12 relative rounded-xl overflow-hidden shadow-2xl h-[450px] flex items-end border border-gray-700">
+            <video id="hero-video" autoplay muted loop class="absolute inset-0 w-full h-full object-cover opacity-50">
+                <source src="https://cdn.cloudflare.steamstatic.com" type="video/webm">
+            </video>
+            <div class="relative p-10 bg-gradient-to-t from-[#1b2838] via-[#1b2838]/60 to-transparent w-full">
+                <span class="bg-blue-600 text-[10px] px-2 py-1 rounded font-bold uppercase tracking-tighter">Nổi bật nhất</span>
+                <h2 id="hero-title" class="text-5xl font-black text-white my-3 italic uppercase tracking-tighter">Loading Game...</h2>
+                <p class="text-gray-300 max-w-xl mb-6 line-clamp-2">Khám phá siêu phẩm hàng đầu được cộng đồng Pixelation bình chọn trong tuần này.</p>
+                <button id="hero-btn" class="btn-steam px-8 py-3 rounded font-bold text-white uppercase tracking-widest shadow-xl">Xem ngay</button>
+            </div>
+        </section>
+
+        <div class="flex flex-col lg:flex-row gap-10">
+            <div class="lg:w-3/4">
+                <h2 class="text-xl mb-8 border-l-4 border-blue-500 pl-4 uppercase font-black tracking-widest text-white">Game Hot Nhất</h2>
+                <div id="game-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+
+            <div class="lg:w-1/4">
+                <h2 class="text-xl mb-8 border-l-4 border-orange-500 pl-4 uppercase font-black tracking-widest text-white">Bảng Xếp Hạng</h2>
+                <div id="ranking-list" class="bg-[#16202d] rounded-xl p-5 flex flex-col gap-5 border border-gray-800 shadow-xl"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="auth-modal" class="fixed inset-0 bg-black/95 hidden flex items-center justify-center z-[100] p-4 backdrop-blur-sm">
+        <div class="bg-[#1b2838] w-full max-w-md rounded-xl border border-gray-700 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">
+            <div class="flex border-b border-gray-800">
+                <button id="tab-login" onclick="toggleAuthTab('login')" class="flex-1 py-5 font-black text-sm tracking-widest transition-all">ĐĂNG NHẬP</button>
+                <button id="tab-register" onclick="toggleAuthTab('register')" class="flex-1 py-5 font-black text-sm tracking-widest transition-all">ĐĂNG KÝ</button>
+            </div>
+            <div class="p-10">
+                <input type="text" id="auth-user" placeholder="Tên tài khoản" class="w-full bg-[#2a3f5a] border-none rounded-lg p-4 mb-4 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="password" id="auth-pass" placeholder="Mật khẩu" class="w-full bg-[#2a3f5a] border-none rounded-lg p-4 mb-8 text-white outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="handleAuth()" class="w-full btn-steam py-4 rounded-lg text-white font-black uppercase tracking-widest shadow-2xl">Xác nhận</button>
+                <button onclick="closeAuthModal()" class="w-full mt-6 text-gray-500 text-xs hover:text-white transition-colors">HỦY BỎ</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center p-4 z-[60] backdrop-blur-md">
+        <div class="bg-[#1b2838] max-w-3xl w-full rounded-2xl overflow-hidden relative border border-gray-700 shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-5 right-5 text-white bg-black/50 w-10 h-10 rounded-full z-10 hover:bg-red-600 transition-colors">✕</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '81516e86480c441c9676e1082c66847d';
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let authMode = 'login';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            fetchGames();
+            toggleAuthTab('login');
+        });
+
+        async function fetchGames() {
+            try {
+                const hotRes = await fetch(`https://api.rawg.io{API_KEY}&ordering=-metacritic&page_size=9`);
+                const hotData = await hotRes.json();
+                renderGames(hotData.results, 'game-list');
+
+                const topRes = await fetch(`https://api.rawg.io{API_KEY}&ordering=-rating&page_size=5`);
+                const topData = await topRes.json();
+                renderRanking(topData.results);
+
+                if(hotData.results[0]) updateHero(hotData.results[0]);
+            } catch (err) {
+                console.error("Lỗi:", err);
+            }
+        }
+
+        function updateHero(game) {
+            document.getElementById('hero-title').innerText = game.name;
+            const price = Math.floor(game.rating * 15);
+            document.getElementById('hero-btn').onclick = () => fetchGameDetail(game.id, price);
+        }
+
+        function renderGames(games, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = games.map(game => {
+                const price = Math.floor(game.rating * 12) + 5;
+                const discount = Math.floor(Math.random() * 60) + 10;
+                return `
+                <div class="game-card rounded-lg shadow-xl overflow-hidden cursor-pointer" onclick="fetchGameDetail(${game.id}, ${price})">
+                    <img src="${game.background_image}" class="w-full h-48 object-cover">
+                    <div class="p-5">
+                        <h3 class="font-bold text-white truncate mb-4">${game.name}</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs bg-[#4c6b22] px-2 py-1 rounded text-[#beee11] font-bold">-${discount}%</span>
+                            <span class="text-green-400 font-black text-lg">${price}$</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderRanking(games) {
+            const container = document.getElementById('ranking-list');
+            container.innerHTML = games.map((game, index) => `
+                <div class="flex items-center gap-4 p-2 hover:bg-white/5 rounded-lg cursor-pointer group transition-all" onclick="fetchGameDetail(${game.id}, 45)">
+                    <span class="text-3xl font-black italic text-gray-700 group-hover:text-blue-500 transition-colors">#${index + 1}</span>
+                    <img src="${game.background_image}" class="w-14 h-14 object-cover rounded-md shadow-lg">
+                    <div class="overflow-hidden">
+                        <p class="text-xs font-bold text-white truncate uppercase tracking-tighter">${game.name}</p>
+                        <p class="text-[10px] text-blue-400 mt-1">⭐ ${game.rating} / 5.0</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function fetchGameDetail(id, price) {
+            const res = await fetch(`https://api.rawg.io{id}?key=${API_KEY}`);
+            const game = await res.json();
+            
+            document.getElementById('modal-content').innerHTML = `
+                <div class="relative h-80">
+                    <img src="${game.background_image}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#1b2838] to-transparent"></div>
+                </div>
+                <div class="p-10 -mt-20 relative">
+                    <h2 class="text-4xl font-black text-white mb-4 italic uppercase tracking-tighter">${game.name}</h2>
+                    <p class="text-gray-400 text-sm mb-8 leading-relaxed line-clamp-4">${game.description_raw}</p>
+                    <div class="grid grid-cols-2 gap-6 mb-10">
+                        <div class="bg-black/40 p-4 rounded-lg border border-gray-700">
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Phổ biến</p>
+                            <p class="text-blue-400 font-bold">📥 ${game.added.toLocaleString()} Lượt tải</p>
+                        </div>
+                        <div class="bg-black/40 p-4 rounded-lg border border-gray-700">
+                            <p class="text-[10px] text-gray-500 uppercase font-bold">Ngày phát hành</p>
+                            <p class="text-white font-bold">📅 ${game.released}</p>
+                        </div>
+                    </div>
+                    <button onclick="buyGame('${game.name}', ${price})" 
+                            class="w-full btn-steam py-5 rounded-xl text-white font-black text-xl shadow-2xl transition-transform active:scale-95 uppercase tracking-widest">
+                        THANH TOÁN NGAY — ${price}$
+                    </button>
+                </div>
+            `;
+            document.getElementById('game-modal').classList.remove('hidden');
+        }
+
+        function showLogin() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function closeModal() { document.getElementById('game-modal').classList.add('hidden'); }
+
+        function toggleAuthTab(mode) {
+            authMode = mode;
+            const isLogin = mode === 'login';
+            document.getElementById('tab-login').className = isLogin ? "flex-1 py-5 font-black text-sm tracking-widest text-blue-500 border-b-2 border-blue-500 bg-blue-500/10" : "flex-1 py-5 font-black text-sm tracking-widest text-gray-500 hover:text-gray-300";
+            document.getElementById('tab-register').className = !isLogin ? "flex-1 py-5 font-black text-sm tracking-widest text-blue-500 border-b-2 border-blue-500 bg-blue-500/10" : "flex-1 py-5 font-black text-sm tracking-widest text-gray-500 hover:text-gray-300";
+        }
+
+        function handleAuth() {
+            const userInp = document.getElementById('auth-user').value.trim();
+            const passInp = document.getElementById('auth-pass').value.trim();
+            if (!userInp || !passInp) return alert("Vui lòng nhập đủ thông tin!");
+            let allUsers = JSON.parse(localStorage.getItem('pixel_users')) || [];
+
+            if (authMode === 'register') {
+                if (allUsers.find(u => u.username === userInp)) return alert("Tài khoản đã tồn tại!");
+                allUsers.push({ username: userInp, password: passInp, balance: 100, library: [] });
+                localStorage.setItem('pixel_users', JSON.stringify(allUsers));
+                alert("Đăng ký thành công! Bạn nhận được 100$ quà tặng.");
+                toggleAuthTab('login');
+            } else {
+                const user = allUsers.find(u => u.username === userInp && u.password === passInp);
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    location.reload();
+                } else alert("Sai thông tin đăng nhập!");
+            }
+        }
+
+        function updateUI() {
+            if (currentUser) {
+                document.getElementById('auth-section').innerHTML = `
+                    <div class="text-right">
+                        <p class="text-blue-400 font-bold text-xs uppercase tracking-widest">${currentUser.username}</p>
+                        <button onclick="logout()" class="text-[10px] text-gray-500 hover:underline">Đăng xuất</button>
+                    </div>`;
+                document.getElementById('wallet-area').classList.remove('hidden');
+                document.getElementById('user-balance').innerText = `${currentUser.balance}$`;
+            }
+        }
+
+        function logout() { localStorage.removeItem('currentUser'); location.reload(); }
+
+        function depositMoney() {
+            if (!currentUser) return;
+            currentUser.balance += 50;
+            saveUserData(currentUser);
+            updateUI();
+        }
+
+        function buyGame(name, price) {
+            if (!currentUser) return showLogin();
+            if (currentUser.balance < price) return alert("Không đủ Pixel-Coin!");
+            currentUser.balance -= price;
+            currentUser.library.push(name);
+            saveUserData(currentUser);
+            updateUI();
+            alert(`Sở hữu thành công: ${name}`);
+            closeModal();
+        }
+
+        function saveUserData(user) {
+            let allUsers = JSON.parse(localStorage.getItem('pixel_users')) || [];
+            const idx = allUsers.findIndex(u => u.username === user.username);
+            if (idx !== -1) allUsers[idx] = user;
+            localStorage.setItem('pixel_users', JSON.stringify(allUsers));
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        }
+    </script>
+    <script src="./index.js"></script>
+</body>
+</html>
